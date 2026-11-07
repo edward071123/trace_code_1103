@@ -14,6 +14,7 @@ public class EventQueryService {
     private EventSessionRepository eventRepository;
 
     public EventQueryService(EventSessionRepository eventRepository) {
+        this.eventRepository = eventRepository;
     }
 
     public List<EventSession> findBookableEvents() {
@@ -30,7 +31,7 @@ public class EventQueryService {
     }
 
     public List<EventSession> findUpcoming(LocalDateTime from, LocalDateTime to) {
-        return eventRepository.findStartingBetween(to, from);
+        return eventRepository.findStartingBetween(from, to);
     }
 }
 

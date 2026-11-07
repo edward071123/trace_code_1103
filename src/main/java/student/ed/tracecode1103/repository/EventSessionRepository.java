@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import student.ed.tracecode1103.entity.EventSession;
@@ -13,7 +14,7 @@ public interface EventSessionRepository extends JpaRepository<EventSession, Long
             select event
             from EventSession event
             where event.status = student.ed.tracecode1103.constant.EventStatus.OPEN
-               or event.remainingCapacity > 0
+               and event.remainingCapacity > 0
             order by event.id
             """)
     List<EventSession> findBookableEvents();
@@ -21,7 +22,7 @@ public interface EventSessionRepository extends JpaRepository<EventSession, Long
     @Query("""
             select event
             from EventSession event
-            where lower(event.title) like lower(:keyword)
+            where lower(event.title) like lower(concat('%', :keyword, '%'))
             order by event.id
             """)
     List<EventSession> searchByTitle(@Param("keyword") String keyword);
@@ -40,6 +41,7 @@ public interface EventSessionRepository extends JpaRepository<EventSession, Long
             @Param("to") LocalDateTime to
     );
 
+    @Modifying
     @Query("""
             update EventSession event
             set event.status = student.ed.tracecode1103.constant.EventStatus.CLOSED

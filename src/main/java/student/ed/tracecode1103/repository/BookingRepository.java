@@ -9,7 +9,7 @@ import student.ed.tracecode1103.constant.BookingStatus;
 import student.ed.tracecode1103.entity.Booking;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-    @Query(value = "select * from bookings where event_id = :memberId order by id", nativeQuery = true)
+    @Query(value = "select * from bookings where member_id = :memberId order by id", nativeQuery = true)
     List<Booking> findHistoryByMemberId(@Param("memberId") Long memberId);
 
     long countByEventIdAndStatus(Long eventId, BookingStatus status);
@@ -17,7 +17,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("""
             select coalesce(sum(booking.totalAmount), 0)
             from Booking booking
-            where booking.status <> student.ed.tracecode1103.constant.BookingStatus.CANCELLED
+            where booking.status = student.ed.tracecode1103.constant.BookingStatus.PAID
             """)
     Long sumPaidRevenue();
 
@@ -26,7 +26,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             from Booking booking
             where booking.member.id = :memberId
               and booking.event.id = :eventId
-              and booking.status = student.ed.tracecode1103.constant.BookingStatus.PAID
+              and booking.status in (student.ed.tracecode1103.constant.BookingStatus.PENDING, student.ed.tracecode1103.constant.BookingStatus.PAID)
             """)
     boolean existsActiveBooking(
             @Param("memberId") Long memberId,

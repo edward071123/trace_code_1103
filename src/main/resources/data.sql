@@ -3,7 +3,7 @@ insert into members (id, account, name, status) values (2, 'amy', 'Amy', 'ACTIVE
 insert into members (id, account, name, status) values (3, 'blocked', '停權會員', 'SUSPENDED');
 
 insert into event_sessions (id, title, ticket_price, remaining_capacity, status, start_at)
-values (101, 'Java Conference', 2100, 50, 'OPEN', '2026-11-10 09:00:00');
+values (101, 'Java Conference', 1200, 50, 'OPEN', '2026-11-10 09:00:00');
 insert into event_sessions (id, title, ticket_price, remaining_capacity, status, start_at)
 values (102, 'Spring Workshop', 800, 0, 'OPEN', '2026-11-05 13:00:00');
 insert into event_sessions (id, title, ticket_price, remaining_capacity, status, start_at)

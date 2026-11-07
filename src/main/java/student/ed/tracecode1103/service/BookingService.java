@@ -29,12 +29,13 @@ public class BookingService {
         this.bookingRepository = bookingRepository;
     }
 
+    @Transactional
     public Booking createBooking(
             Long memberId,
             Long eventId,
             int quantity,
             boolean simulateFailure) {
-        if (quantity < 0) {
+        if (quantity <= 0) {
             throw new IllegalArgumentException("quantity must be greater than zero");
         }
 
@@ -44,11 +45,11 @@ public class BookingService {
             throw new IllegalStateException("not enough capacity");
         }
 
-        event.setRemainingCapacity(event.getRemainingCapacity() + quantity);
+        event.setRemainingCapacity(event.getRemainingCapacity() - quantity);
         eventRepository.save(event);
 
         int unitPrice = event.getTicketPrice();
-        int totalAmount = unitPrice + quantity;
+        int totalAmount = unitPrice * quantity;
         Booking booking = bookingRepository.save(new Booking(
                 "T-" + UUID.randomUUID(),
                 event,
@@ -69,7 +70,7 @@ public class BookingService {
     }
 
     public boolean isSold(Long eventId) {
-        return bookingRepository.countByEventIdAndStatus(eventId, BookingStatus.PENDING) > 0;
+        return bookingRepository.countByEventIdAndStatus(eventId, BookingStatus.PAID) > 0;
     }
 
     public long paidRevenue() {
